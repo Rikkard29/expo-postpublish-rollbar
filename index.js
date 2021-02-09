@@ -85,7 +85,7 @@ module.exports = async options => {
     const template = config.minifiedUrlTemplate ? config.minifiedUrlTemplate : null;
 
     // ios
-    const iosIdentifyer = ['ios', iosManifest.ios.bundleIdentifier, iosManifest.ios.buildNumber].join('-')
+    const iosIdentifier = `${exp.version}.ios`;
     const iosFiles = {
       sourceFile: tmpdir + '/main.ios.bundle',
       sourceMap: tmpdir + '/main.ios.map'
@@ -93,14 +93,14 @@ module.exports = async options => {
 
     const iosMinifiedUrl = renderUrlTemplate(iosManifest.bundleUrl, template, log);
 
-    const iosUpload = uploadSourceMap(config.serverItemAccessToken, iosIdentifyer, iosMinifiedUrl, iosFiles)
-    .then(function() { log('Successfully uploaded iOS sourcemap to rollbar (' + iosIdentifyer + ').')})
+    const iosUpload = uploadSourceMap(config.serverItemAccessToken, iosIdentifier, iosMinifiedUrl, iosFiles)
+    .then(function() { log('Successfully uploaded iOS sourcemap to rollbar (' + iosIdentifier + ').')})
     .catch(function(e) { log('Failed to upload iOS sourcemap to rollbar (' + e.message + ')') })
 
     await iosUpload;
 
     // android
-    const androidIdentifyer = ['android', androidManifest.android.package, androidManifest.android.versionCode].join('-')
+    const androidIdentifier = `${exp.version}.android`;;
     const androidFiles = {
       sourceFile: tmpdir + '/main.android.bundle',
       sourceMap: tmpdir + '/main.android.map'
@@ -110,11 +110,11 @@ module.exports = async options => {
 
     const androidUpload = uploadSourceMap(
       config.serverItemAccessToken,
-      androidIdentifyer,
+      androidIdentifier,
       androidMinifiedUrl,
       androidFiles
     )
-    .then(function () { log('Successfully uploaded Android sourcemap to rollbar (' + androidIdentifyer + ').') })
+    .then(function () { log('Successfully uploaded Android sourcemap to rollbar (' + androidIdentifier + ').') })
     .catch(function (e) { log('Successfully uploaded Android sourcemap to rollbar (' + e.message + ').') })
 
     await androidUpload
